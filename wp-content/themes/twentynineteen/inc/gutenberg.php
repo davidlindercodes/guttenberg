@@ -43,3 +43,16 @@
 }
 
 add_action('init', 'david_gutenberg_default_colors' );
+
+
+function david_gutenberg_blocks() {
+    wp_register_script('custom-cta-js', get_template_directory_uri() . '/js/gutenberg-cta-block.js', array('wp-blocks'));
+
+    register_block_type( 'david/custom-cta', array(
+        'editor_script' => 'custom-cta-js'
+    ) );
+
+
+}
+
+add_action('init', 'david_gutenberg_blocks' );
