@@ -2,9 +2,11 @@ const { registerBlockType } = wp.blocks;
 const { 
     RichText,
     InspectorControls, 
-    ColorPalette
+    ColorPalette,
+    MediaUpload,
+    MediaUploadCheck
 } = wp.editor;
-const { PanelBody } = wp.components;
+const { PanelBody, IconButton } = wp.components;
 
 
 registerBlockType('david/custom-cta', {
@@ -35,6 +37,10 @@ registerBlockType('david/custom-cta', {
             type: 'string',
             default: 'yellow'
         },
+        backgroundImage: {
+            type: 'string',
+            default: null
+        }
     },
 
 
@@ -49,7 +55,8 @@ registerBlockType('david/custom-cta', {
             title,
             body, 
             titleColor,
-            bodyColor
+            bodyColor,
+            backgroundImage
         } = attributes;
 
         function onChangeTitle(newTitle) {
@@ -68,6 +75,10 @@ registerBlockType('david/custom-cta', {
             setAttributes({ bodyColor: newColor });
         }
 
+        function onSelectImageChange(newImage) {
+            setAttributes({ backgroundImage: newImage.sizes.full.url });
+        }
+
         return ([ 
 
             <InspectorControls style={ { marginBottom: '40px'} } >
@@ -75,15 +86,52 @@ registerBlockType('david/custom-cta', {
                     <p><strong>Select a Title color:</strong></p>
                     <ColorPalette value={titleColor} onChange= { onTitleColorChange } />
                 </PanelBody>
-            </InspectorControls>,
-            <InspectorControls style={ { marginBottom: '40px'} } >
                 <PanelBody title={ 'Font Color Settings' } >
-                    <p><strong>Select a Title color:</strong></p>
+                    <p><strong>Select a Body color:</strong></p>
                     <ColorPalette value={bodyColor} onChange= { onBodyColorChange } />
+                </PanelBody>
+                <PanelBody title={ 'Background Image Settings' } >
+                    <p><strong>Select a background image:</strong></p>
+                    {/* <MediaUpload 
+                        onSelect={ onSelectImageChange }
+                        type="image"
+                        value={ backgroundImage }
+                        render={ ( { open } ) => {
+                            <IconButton 
+                                onClick={ open }
+                                icon="upload"
+                                className="editor-media-placeholder__button is-button is-default is-large"
+                            >
+                                Background Image
+                            </IconButton>
+                        } }
+                    /> */}
+                    		<MediaUploadCheck>
+			<MediaUpload
+				onSelect={ onSelectImageChange }
+				allowedTypes="image"
+				value={ backgroundImage }
+				render={ ( { open } ) => (
+                    <IconButton 
+                    onClick={ open }
+                    icon="upload"
+                    className="editor-media-placeholder__button is-button is-default is-large"
+                >
+                    Background Image
+                </IconButton>
+				) }
+			/>
+		</MediaUploadCheck>
                 </PanelBody>
             </InspectorControls>,
 
-            <div class="cta-container">
+
+            <div class="cta-container" style= {{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover', 
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}>
 
                 <RichText   key="editable"
                             tagName="h2"
@@ -111,12 +159,18 @@ registerBlockType('david/custom-cta', {
             title,
             body,
             titleColor,
-            bodyColor
+            bodyColor,
+            backgroundImage
         } = attributes;
 
 
         return (
-            <div class="cta-container"> 
+            <div class="cta-container" style= {{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover', 
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}> 
                 <h2 style={ { color: titleColor } }> { title } </h2>
                 <RichText.Content   tagName="p"
                                     value={body}
