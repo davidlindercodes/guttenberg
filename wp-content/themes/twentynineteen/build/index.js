@@ -93,6 +93,9 @@ __webpack_require__.r(__webpack_exports__);
 const {
   registerBlockType
 } = wp.blocks;
+const {
+  RichText
+} = wp.editor;
 registerBlockType('david/custom-cta', {
   //build-in attributes
   title: 'Cal to Action',
@@ -100,15 +103,75 @@ registerBlockType('david/custom-cta', {
   category: 'text',
   icon: 'format-image',
   // custom attributes 
-  attributes: {},
+  attributes: {
+    title: {
+      type: 'string',
+      source: 'html',
+      selector: 'h2'
+    },
+    body: {
+      type: 'string',
+      source: 'html',
+      selector: 'p'
+    }
+  },
 
   // custom functions 
   // build-in functions
-  edit() {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, " Custom block ");
+  edit(_ref) {
+    let {
+      attributes,
+      setAttributes
+    } = _ref;
+    const {
+      title,
+      body
+    } = attributes;
+
+    function onChangeTitle(newTitle) {
+      setAttributes({
+        title: newTitle
+      });
+    }
+
+    function onChangeBody(newBody) {
+      setAttributes({
+        body: newBody
+      });
+    }
+
+    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "cta-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText, {
+      key: "editable",
+      tagName: "h2",
+      placeholder: "Your CTA Title",
+      value: title,
+      onChange: onChangeTitle
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText, {
+      key: "editable",
+      tagName: "p",
+      placeholder: "Your CTA Description",
+      value: body,
+      onChange: onChangeBody
+    }))];
   },
 
-  save() {}
+  save(_ref2) {
+    let {
+      attributes
+    } = _ref2;
+    const {
+      title,
+      body
+    } = attributes;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "cta-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, " ", title, " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText.Content, {
+      tagName: "p",
+      value: body
+    }));
+  }
 
 });
 }();
