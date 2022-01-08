@@ -94,8 +94,13 @@ const {
   registerBlockType
 } = wp.blocks;
 const {
-  RichText
+  RichText,
+  InspectorControls,
+  ColorPalette
 } = wp.editor;
+const {
+  PanelBody
+} = wp.components;
 registerBlockType('david/custom-cta', {
   //build-in attributes
   title: 'Cal to Action',
@@ -109,10 +114,18 @@ registerBlockType('david/custom-cta', {
       source: 'html',
       selector: 'h2'
     },
+    titleColor: {
+      type: 'string',
+      default: 'black'
+    },
     body: {
       type: 'string',
       source: 'html',
       selector: 'p'
+    },
+    bodyColor: {
+      type: 'string',
+      default: 'yellow'
     }
   },
 
@@ -125,7 +138,9 @@ registerBlockType('david/custom-cta', {
     } = _ref;
     const {
       title,
-      body
+      body,
+      titleColor,
+      bodyColor
     } = attributes;
 
     function onChangeTitle(newTitle) {
@@ -140,20 +155,56 @@ registerBlockType('david/custom-cta', {
       });
     }
 
-    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    function onTitleColorChange(newColor) {
+      setAttributes({
+        titleColor: newColor
+      });
+    }
+
+    function onBodyColorChange(newColor) {
+      setAttributes({
+        bodyColor: newColor
+      });
+    }
+
+    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorControls, {
+      style: {
+        marginBottom: '40px'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelBody, {
+      title: 'Font Color Settings'
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Select a Title color:")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPalette, {
+      value: titleColor,
+      onChange: onTitleColorChange
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(InspectorControls, {
+      style: {
+        marginBottom: '40px'
+      }
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(PanelBody, {
+      title: 'Font Color Settings'
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Select a Title color:")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ColorPalette, {
+      value: bodyColor,
+      onChange: onBodyColorChange
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "cta-container"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText, {
       key: "editable",
       tagName: "h2",
       placeholder: "Your CTA Title",
       value: title,
-      onChange: onChangeTitle
+      onChange: onChangeTitle,
+      style: {
+        color: titleColor
+      }
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText, {
       key: "editable",
       tagName: "p",
       placeholder: "Your CTA Description",
       value: body,
-      onChange: onChangeBody
+      onChange: onChangeBody,
+      style: {
+        color: bodyColor
+      }
     }))];
   },
 
@@ -163,13 +214,22 @@ registerBlockType('david/custom-cta', {
     } = _ref2;
     const {
       title,
-      body
+      body,
+      titleColor,
+      bodyColor
     } = attributes;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "cta-container"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, " ", title, " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText.Content, {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+      style: {
+        color: titleColor
+      }
+    }, " ", title, " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RichText.Content, {
       tagName: "p",
-      value: body
+      value: body,
+      style: {
+        color: bodyColor
+      }
     }));
   }
 

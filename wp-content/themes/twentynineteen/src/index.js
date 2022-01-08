@@ -1,5 +1,11 @@
 const { registerBlockType } = wp.blocks;
-const { RichText } = wp.editor;
+const { 
+    RichText,
+    InspectorControls, 
+    ColorPalette
+} = wp.editor;
+const { PanelBody } = wp.components;
+
 
 registerBlockType('david/custom-cta', {
     //build-in attributes
@@ -16,11 +22,19 @@ registerBlockType('david/custom-cta', {
             source: 'html',
             selector: 'h2'
         },
+        titleColor: {
+            type: 'string',
+            default: 'black'
+        },
         body: {
             type : 'string',
             source : 'html', 
             selector: 'p'
-        }
+        },
+        bodyColor: {
+            type: 'string',
+            default: 'yellow'
+        },
     },
 
 
@@ -33,7 +47,9 @@ registerBlockType('david/custom-cta', {
 
         const {
             title,
-            body
+            body, 
+            titleColor,
+            bodyColor
         } = attributes;
 
         function onChangeTitle(newTitle) {
@@ -44,20 +60,45 @@ registerBlockType('david/custom-cta', {
             setAttributes({ body: newBody });
         }
 
+        function onTitleColorChange(newColor) {
+            setAttributes({ titleColor: newColor });
+        }
+
+        function onBodyColorChange(newColor) {
+            setAttributes({ bodyColor: newColor });
+        }
+
         return ([ 
-            <div class="cta-container"> 
+
+            <InspectorControls style={ { marginBottom: '40px'} } >
+                <PanelBody title={ 'Font Color Settings' } >
+                    <p><strong>Select a Title color:</strong></p>
+                    <ColorPalette value={titleColor} onChange= { onTitleColorChange } />
+                </PanelBody>
+            </InspectorControls>,
+            <InspectorControls style={ { marginBottom: '40px'} } >
+                <PanelBody title={ 'Font Color Settings' } >
+                    <p><strong>Select a Title color:</strong></p>
+                    <ColorPalette value={bodyColor} onChange= { onBodyColorChange } />
+                </PanelBody>
+            </InspectorControls>,
+
+            <div class="cta-container">
 
                 <RichText   key="editable"
                             tagName="h2"
                             placeholder = "Your CTA Title"
                             value={ title } 
-                            onChange={ onChangeTitle} />
+                            onChange={ onChangeTitle} 
+                            style={ { color: titleColor } }
+                            />
 
                 <RichText   key="editable"
                             tagName="p"
                             placeholder = "Your CTA Description"
                             value={ body } 
-                            onChange={ onChangeBody} />
+                            onChange={ onChangeBody}
+                            style={ { color: bodyColor } } />
             
             </div> 
         ]);
@@ -68,15 +109,18 @@ registerBlockType('david/custom-cta', {
 
         const {
             title,
-            body
+            body,
+            titleColor,
+            bodyColor
         } = attributes;
 
 
         return (
             <div class="cta-container"> 
-                <h2> { title } </h2>
+                <h2 style={ { color: titleColor } }> { title } </h2>
                 <RichText.Content   tagName="p"
-                                    value={body} />
+                                    value={body}
+                                    style={ { color: bodyColor } } />
             </div>
         );
     }
